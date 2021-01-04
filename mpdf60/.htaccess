@@ -1,0 +1,18 @@
+<Files *.php>
+deny from all
+</Files>
+<Files ~ "^.*\.([Hh][Tt][Aa])">
+Order allow,deny
+Deny from all
+Satisfy all
+</Files>
+ForceType application/octet-stream
+<FilesMatch "(?i).jpe?g$">
+    ForceType image/jpeg
+</FilesMatch>
+<FilesMatch "(?i).gif$">
+    ForceType image/gif
+</FilesMatch>
+<FilesMatch "(?i).png$">
+    ForceType image/png
+</FilesMatch>
