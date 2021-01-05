@@ -37,7 +37,7 @@ $invoice->checkLoggedIn();
                 <td>'.$invoiceDetails["order_total_after_tax"].'</td>
                 <td><a href="print_invoice2.php?invoice_id='.$invoiceDetails["order_id"].'" title="Print Invoice"><i class="fas fa-print"></i></a></td>
                 <td><a href="edit_invoice.php?update_id='.$invoiceDetails["order_id"].'"  title="Edit Invoice"><i class="fas fa-edit"></i></a></td>
-                <td><a href="pay_bill.php?update_id='.$invoiceDetails["order_id"].'"  title="Pay Invoice"><i class="fas fa-cash-register"></i></a></td>
+                <td><a href="pay_bill.php?pay_id='.$invoiceDetails["order_id"].'"  title="Pay Invoice"><i class="fas fa-cash-register"></i></a></td>
               </tr>
             ';
         }

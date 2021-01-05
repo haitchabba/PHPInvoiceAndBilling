@@ -92,7 +92,7 @@ class Invoice{
 			mysqli_query($this->dbConnect, $sqlInsertItem);
 		}
 	}
-	public function updateInvoice($POST) {
+	public function updateInvoice2($POST) {
 		if($POST['invoiceId']) {
 			$sqlInsert = "UPDATE ".$this->invoiceOrderTable."
 			SET order_receiver_name = '".$POST['companyName']."', order_receiver_address= '".$POST['address']."', order_total_before_tax = '".$POST['subTotal']."', order_total_tax = '".$POST['taxAmount']."', order_tax_per = '".$POST['taxRate']."', order_total_after_tax = '".$POST['totalAftertax']."', order_amount_paid = '".$POST['amountPaid']."', order_total_amount_due = '".$POST['amountDue']."', note = '".$POST['notes']."'
