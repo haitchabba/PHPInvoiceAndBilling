@@ -16,27 +16,27 @@ $invoice->checkLoggedIn();
 	<table id="data-table" class="table table-condensed table-striped">
 		<thead>
 			<tr>
-				<th>Client ID</th>
-				<th>Order ID</th>
-				<th>Transaction Date</th>
-				<th>Customer Name</th>
-				<th>Amount Paid</th>
-				<th>Payment Type</th>
-				<th>Amount Due</th>
+				<th>User ID</th>
+				<th>Full Name</th>
+				<th>Mobile</th>
+				<th>Status</th>
+				<th>Activate</th>
+				<th>Deactivate</th>
 			</tr>
 		</thead>
 		<?php
-		$TransactList = $invoice->getTransactionList();
-		foreach($TransactList as $transactionDetails){
-			$transactionDate = date("d/M/Y, H:i:s", strtotime($transactionDetails["trans_date"]));
+		$act = "Activate";
+		$deact = "Deactivate";
+		$UserList = $invoice->getUsersList();
+		foreach($UserList as $UserDetails){
 			echo '
 			<tr>
-			<td>'.$transactionDetails["order_id"].'</td>
-			<td>'.$transactionDate.'</td>
-			<td>'.$transactionDetails["customer_name"].'</td>
-			<td>'.$transactionDetails["order_amount_paid"].'</td>
-			<td>'.$transactionDetails["pay_type"].'</td>
-			<td>'.$transactionDetails["order_total_amount_due"].'</td>
+			<td>'.$UserDetails["id"].'</td>
+			<td>'.$UserDetails["last_name"].' '.$UserDetails["first_name"].'</td>
+			<td>'.$UserDetails["mobile"].'</td>
+			<td>'.$UserDetails["sts"].'</td>
+			<td><a href="action.php?action='.$act.'&email='.$UserDetails["email"].'"  title="Activate User"><i class="fas fa-eye"></i></a></td>
+			<td><a href="action.php?action='.$deact.'&email='.$UserDetails["email"].'"  title="Deactivate User"><i class="fas fa-eye"></i></a></td>
 			</tr>
 			';
 		}

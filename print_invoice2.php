@@ -83,9 +83,9 @@ th {
 	<table class = "inner">
 	<tr>
 	<th align="left">Sr No.</th>
-	<th align="left">Item Code</th>
-	<th align="left">Item Name</th>
-	<th align="left">Quantity</th>
+	<th align="left">Room No.</th>
+	<th align="left">Room Type</th>
+	<th align="left">Nights</th>
 	<th align="left">Price</th>
 	<th align="left">Actual Amt.</th>
 	</tr>';

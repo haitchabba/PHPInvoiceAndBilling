@@ -4,13 +4,14 @@ include('header.php');
 include 'Invoice.php';
 $invoice = new Invoice();
 $invoice->checkLoggedIn();
-if(!empty($_POST['companyName']) && $_POST['companyName'] && !empty($_POST['invoiceId']) && $_POST['invoiceId']) {
-	$invoice->saveTrans($_POST);
-	header("Location:invoice_list.php");
+if(!empty($_POST['fullname']) && $_POST['fullname'] && !empty($_POST['invoiceId']) && $_POST['invoiceId']) {
+	$invoice->updateInvoiceOnly($_POST);
+	//$invoice->saveTrans($_POST);
+	header("Location:client_prof.php?client_id=".$_POST['rID']."");
 }
-if(!empty($_GET['update_id']) && $_GET['update_id']) {
-	$invoiceValues = $invoice->getInvoice($_GET['update_id']);
-	$invoiceItems = $invoice->getInvoiceItems($_GET['update_id']);
+if(!empty($_GET['pay_id']) && $_GET['pay_id']) {
+	$invoiceValues = $invoice->getInvoice($_GET['pay_id']);
+	$invoiceItems = $invoice->getInvoiceItems($_GET['pay_id']);
 }
 ?>
 <title>PeopleWhoCode : Demo Build Invoice System with PHP & MySQL</title>
@@ -20,7 +21,7 @@ if(!empty($_GET['update_id']) && $_GET['update_id']) {
 <div class="container content-invoice">
 	<div class="cards">
 		<div class="card-bodys">
-			<form action="" id="invoice-form" method="post" class="invoice-form" role="form" novalidate="">
+			<form action="" id="invoice-form" method="post" class="needs-validation" novalidate autocomplete="off">
 				<div class="load-animate animated fadeInUp">
 					<div class="row">
 						<div class="col-xs-12">
@@ -31,20 +32,16 @@ if(!empty($_GET['update_id']) && $_GET['update_id']) {
 					<input id="currency" type="hidden" value="$">
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-							<h3>From,</h3>
-							<?php echo $_SESSION['user']; ?><br>
-							<?php echo $_SESSION['address']; ?><br>
-							<?php echo $_SESSION['mobile']; ?><br>
-							<?php echo $_SESSION['email']; ?><br>
+
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 							<h3>To,</h3>
 							<div class="form-group">
-								<input value="<?php echo $invoiceValues['order_receiver_name']; ?>" type="text" class="form-control" name="companyName" id="companyName" placeholder="Company Name" autocomplete="off" readonly>
+								<input value="<?php echo $invoiceValues['order_receiver_company']; ?>" type="text" class="form-control" name="companyName" id="companyName" placeholder="Company Name" autocomplete="off" readonly>
 							</div>
 							<div class="form-group">
-								<textarea class="form-control" rows="3" name="address" id="address" placeholder="Your Address" readonly><?php echo
-								$invoiceValues['order_receiver_address']; ?></textarea>
+								<input value="<?php echo $invoiceValues['order_receiver_name']; ?>" type="text" class="form-control" name="fullname" id="fullname" placeholder="Company Name" autocomplete="off" readonly>
+
 							</div>
 
 						</div>
@@ -72,7 +69,7 @@ if(!empty($_GET['update_id']) && $_GET['update_id']) {
 									?>
 									<tr>
 										<td><div class="custom-control custom-checkbox">
-											<input type="checkbox" class="custom-control-input itemRow" id="itemRow" readonly>
+											<input type="checkbox" class="custom-control-input itemRow"  readonly>
 											<label class="custom-control-label" for="itemRow"></label>
 										</div></td>
 										<td><input type="text" value="<?php echo $invoiceItem["item_code"]; ?>" name="productCode[]" id="productCode_<?php echo $count; ?>" class="form-control" autocomplete="off" readonly></td>
@@ -144,10 +141,28 @@ if(!empty($_GET['update_id']) && $_GET['update_id']) {
 						</div>
 						<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 							<div class="form-group">
-								<label>Amount Due: &nbsp;</label>
+								<label>Previous Amount Due: &nbsp;</label>
 								<div class="input-group">
 									<div class="input-group-append currency"><span class="input-group-text">$</span></div>
 									<input value="<?php echo $invoiceValues['order_total_amount_due']; ?>" type="number" class="form-control" name="amountDue" id="amountDue" placeholder="Amount Due" readonly>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+						</div>
+
+						<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+
+						</div>
+
+						<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+							<div class="form-group">
+								<label>Current Amount Due: &nbsp;</label>
+								<div class="input-group">
+									<div class="input-group-append currency"><span class="input-group-text">$</span></div>
+									<input value="" type="number" class="form-control" name="camountDue" id="camountDue" placeholder="Current Amount Due" readonly>
 								</div>
 							</div>
 						</div>
@@ -179,12 +194,14 @@ if(!empty($_GET['update_id']) && $_GET['update_id']) {
 						<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
 							<h3>Notes: </h3>
 							<div class="form-group">
-								<textarea class="form-control txt" rows="5" name="notes" id="notes" placeholder="Your Notes" readonly><?php echo $invoiceValues['note']; ?></textarea>
+								<textarea class="form-control txt" rows="5" name="notes" id="notes" placeholder="Your Notes" ></textarea>
 							</div>
 							<br>
 							<div class="form-group">
 								<input type="hidden" value="<?php echo $_SESSION['userid']; ?>" class="form-control" name="userId">
+								<input type="hidden" value="<?php echo $invoiceValues["rID"]; ?>" class="form-control" name="rID">
 								<input type="hidden" value="<?php echo $invoiceValues['order_id']; ?>" class="form-control" name="invoiceId" id="invoiceId">
+								<input type="hidden" value="" class="form-control" name="amountPaidFinal" id="amountPaidFinal">
 								<input data-loading-text="Updating Invoice..." type="submit" name="invoice_btn" value="Save Invoice" class="btn btn-success submit_btn invoice-save-btm">
 							</div>
 
